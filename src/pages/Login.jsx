@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const { login, error } = useContext(UserContext); // Usar login y error del contexto
+  const { login, error, token } = useContext(UserContext); // Traer el error y token del contexto
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -11,7 +11,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password); // Llamar al método login
-    navigate('/profile'); // Redirigir al perfil
+    if (token) {
+      navigate('/profile'); // Redirigir al perfil si el login es exitoso
+    }
   };
 
   return (

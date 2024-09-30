@@ -3,15 +3,17 @@ import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const { register, error } = useContext(UserContext); // Usar register y error del contexto
+  const { register, error } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(email, password); // Llamar al método register
-    navigate('/profile'); // Redirigir al perfil
+    await register(email, password); 
+    if (!error) {
+      navigate('/profile');
+    }
   };
 
   return (

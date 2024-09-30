@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
   const [email, setEmail] = useState(null);
   const [error, setError] = useState(null);
 
-  // Método del login
+  // Método de login
   const login = async (email, password) => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
@@ -25,14 +25,14 @@ export const UserProvider = ({ children }) => {
         setEmail(data.email);
         setError(null);
       } else {
-        setError(data.message);
+        setError(data.message || 'Error al iniciar sesión');
       }
     } catch (error) {
-      setError('Error en la autenticación');
+      setError('Error de red o en el servidor al intentar iniciar sesión.');
     }
   };
 
-  // Método de registro
+  // Método de registro (sin cambios)
   const register = async (email, password) => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/register', {
@@ -50,46 +50,20 @@ export const UserProvider = ({ children }) => {
         setEmail(data.email);
         setError(null);
       } else {
-        setError(data.message);
+        setError(data.message || 'Error al registrarse');
       }
     } catch (error) {
-      setError('Error en el registro');
+      setError('Error de red o en el servidor al intentar registrarse.');
     }
   };
 
-  // Método de logout
   const logout = () => {
-    setToken(null); // Elimina token
-    setEmail(null); // Elimina mail
-  };
-
-  // Método para obtener el perfil del usuario autenticado
-  const getProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/me', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return data; 
-      } else {
-        setError(data.message);
-        return null;
-      }
-    } catch (error) {
-      setError('Error al obtener el perfil del usuario');
-      return null;
-    }
+    setToken(null);
+    setEmail(null);
   };
 
   return (
-    <UserContext.Provider value={{ token, email, login, register, logout, getProfile, error }}>
+    <UserContext.Provider value={{ token, email, error, login, register, logout }}>
       {children}
     </UserContext.Provider>
   );
